@@ -1,32 +1,39 @@
-function upTime(countTo) { // fuction สำหรับคำนวณเวลา
+function upTime(countTo) {
+    now = new Date(); // Current date
+    countTo = new Date(countTo); // Target date
+    difference = now - countTo; // Calculate the difference in milliseconds
 
-
-    now = new Date(); // วันที่ปัจจุบัน object
-    countTo = new Date(countTo); // ทำค่าที่รับเข้ามาจาก countTo วันที่ให้เป็น object
-    difference = (now - countTo); // นำวันเวลาปัจจุบันกับค่าที่ได้รับมาลบกัน 
-
-    // ในส่วนนี้เป็นการคำนวณหาจำนวนวัน ชั่วโมง นาที และวินาที
-    days = Math.floor(difference / (60 * 60 * 1000 * 24) * 1);
+    // Calculate years, months, days, hours, minutes, and seconds
+    days = Math.floor(difference / (60 * 60 * 1000 * 24));
     years = Math.floor(days / 365);
     if (years >= 1) {
-        days = days - (years * 365)
+        days -= years * 365;
     }
-    hours = Math.floor((difference % (60 * 60 * 1000 * 24)) / (60 * 60 * 1000) * 1);
-    mins = Math.floor(((difference % (60 * 60 * 1000 * 24)) % (60 * 60 * 1000)) / (60 * 1000) * 1);
-    secs = Math.floor((((difference % (60 * 60 * 1000 * 24)) % (60 * 60 * 1000)) % (60 * 1000)) / 1000 * 1);
-    // นำตัวค่าที่ได้มาใส่ใน element html ที่เตรียมไว้ 
+
+    months = Math.floor(days / 30); // Approximate months as 30 days
+    if (months >= 1) {
+        days -= months * 30;
+    }
+
+    hours = Math.floor((difference % (60 * 60 * 1000 * 24)) / (60 * 60 * 1000));
+    mins = Math.floor(((difference % (60 * 60 * 1000 * 24)) % (60 * 60 * 1000)) / (60 * 1000));
+    secs = Math.floor((((difference % (60 * 60 * 1000 * 24)) % (60 * 60 * 1000)) % (60 * 1000)) / 1000);
+
+    // Update the HTML with the calculated values
     $(".up_y").text(years);
+    $(".up_mn").text(months);
     $(".up_d").text(days);
     $(".up_h").text(hours);
     $(".up_m").text(mins);
     $(".up_s").text(secs);
 
-    // set ให้คำนวณใหม่ทุกๆ 1 วินาที 
+    // Recalculate every second
     clearTimeout(upTime.to);
     upTime.to = setTimeout(function () {
         upTime(countTo);
     }, 1000);
 }
+
 
 // init datetimepicker ใน id yearinput
 $('#yearinput').appendDtpicker({
